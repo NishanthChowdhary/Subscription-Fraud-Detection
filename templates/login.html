@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='js/browser_tracking.js') }}"></script>
+</head>
+<body>
+    {% include "includes/_messages.html" %}
+    {% include "includes/_navbar.html" %}
+    <div class="login-container">
+        <h2>Sign In</h2>
+        <form method="POST">
+            <input type="email" name="email" class="input-box" placeholder="Enter your email">
+            <button class="btn" type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

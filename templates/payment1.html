@@ -1,0 +1,98 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Payment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <h1>Online Shopping</h1>
+    </div>
+    <div class="payment-container">
+        <h2>Payment for {{ product.name }}</h2>
+        <p>Price: ${{ product.price }}</p>
+        <p>Username: {{ email }}</p>
+        <form method="POST">
+            <input type="text" name="name" class="input-box" placeholder="Enter your name">
+            <input type="text" name="address" class="input-box" placeholder="Enter your address">
+            <input type="text" name="card" class="input-box" placeholder="Enter your card number">
+            <button class="btn" type="submit">Complete Payment</button>
+        </form>
+    </div>
+    <script>
+        // Complete Payment
+        function completePayment() {
+            const name = document.getElementById('user-name').value;
+            const address = document.getElementById('user-address').value;
+            const card = document.getElementById('user-card').value;
+            const dob = document.getElementById('user-dob').value;
+            const orderAmount = document.getElementById('order-amount').value;
+    
+            if (name && address && card.length === 16 && dob && orderAmount > 0) {
+                const productPrice = selectedProduct.price;
+                const numberOfProducts = Math.floor(orderAmount / productPrice); // Calculate number of products purchased
+                alert(`Thank you for purchasing ${numberOfProducts} units of ${selectedProduct.name}!`);
+            } else {
+                alert('Please enter valid details.');
+            }
+        }
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Payment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function completePayment() {
+            // event.preventDefault(); // Prevent the default form submission
+
+            const name = document.getElementById('user-name').value;
+            const address = document.getElementById('user-address').value;
+            const card = document.getElementById('user-card').value;
+            const orderAmount = document.getElementById('order-amount').value;
+
+            // Validate the form inputs
+            if (name === '') {
+                alert('Please enter your name.');
+                return;
+            }
+            if (address === '') {
+                alert('Please enter your address.');
+                return;
+            }
+            if (card.length !== 16 || !/^\d+$/.test(card)) {
+                alert('Please enter a valid 16-digit card number.');
+                return;
+            }
+            if (orderAmount <= 0 || isNaN(orderAmount)) {
+                alert('Please enter a valid order amount greater than 0.');
+                return;
+            }
+
+            // If all validations pass, submit the form
+            alert('Payment successful!');
+            document.getElementById('payment-form').submit();  // Programmatically submit the form
+        }
+    </script>
+</head>
+<body>
+    {% include "includes/_messages.html" %}
+    {% include "includes/_navbar.html" %}
+    <div class="payment-container">
+        <h2>Payment for {{ product.name }}</h2>
+        <p>Price: ${{ product.price }}</p>
+        <p>Username: {{ email }}</p>
+
+        <!-- Payment form with validation -->
+        <form id="payment-form" method="POST" onsubmit="completePayment(event)">
+            <input type="text" name="name" id="user-name" class="input-box" placeholder="Enter your name" required><br>
+            <input type="text" name="address" id="user-address" class="input-box" placeholder="Enter your address" required><br>
+            <input type="text" name="card" id="user-card" class="input-box" placeholder="Enter your card number (16 digits)" required><br>
+            <input type="text" name="amount" id="user-amount" class="input-box" style="display: none;" value=${{product.price}}>
+            <button class="btn" onclick="completePayment()">Complete Payment</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Product Listing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='js/browser_tracking.js') }}"></script>
+</head>
+<body>
+    {% include "includes/_messages.html" %}
+    {% include "includes/_navbar.html" %}
+    <div class="product-list" id="product-list">
+        <!-- Product items will be inserted here by JavaScript -->
+    </div>
+    <script>
+        // Products array will be generated dynamically via Flask Jinja templating
+        let products = [];
+        for (let i = 1; i <= 100; i++) {
+            products.push({ id: i, name: `Product ${i}`, price: i * 10, description: `Description for Product ${i}`, image: `product.jpg` });
+        }
+
+        // Search products based on query
+        function searchProducts() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const productItems = document.querySelectorAll('.product-item');
+            productItems.forEach(item => {
+                const name = item.querySelector('h3').innerText.toLowerCase();
+                if (name.includes(query)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Load the products dynamically when the page loads
+        function loadProducts() {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = ''; // Clear the list to avoid duplication
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                productItem.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>$${product.price}</p>
+                    <a href="/details/${product.id}" class="btn">View Details</a>
+                `;
+                productList.appendChild(productItem);
+            });
+        }
+
+        // Run the product loader on page load
+        window.onload = function() {
+            loadProducts();
+        };
+    </script>
+</body>
+</html>

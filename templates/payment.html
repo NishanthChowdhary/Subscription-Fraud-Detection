@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Payment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='js/browser_tracking.js') }}"></script>
+    <script>
+        let startTime, endTime;
+        let keystrokes = 0;
+
+        // Start timing on first keystroke
+        function startTyping() {
+            if (keystrokes === 0) {
+                startTime = new Date().getTime();
+            }
+            keystrokes++;
+        }
+
+        // Calculate typing speed when form is submitted
+        function calculateTypingSpeed() {
+            endTime = new Date().getTime();
+            const totalTime = (endTime - startTime) / 1000;  // time in seconds
+            const typingSpeed = keystrokes / totalTime;  // keystrokes per second
+            alert(typingSpeed);
+            if(typingSpeed==NaN) {
+                document.getElementById('typing-speed').value = 0;
+            } else {
+                document.getElementById('typing-speed').value = typingSpeed;
+            }
+        }
+
+        // Retrieve tab switch count from sessionStorage and submit form
+        function completePayment(event) {
+            event.preventDefault();  // Prevent default form submission
+            calculateTypingSpeed();  // Calculate typing speed
+
+            // Store tab switches from sessionStorage into the hidden field
+            const tabSwitches = sessionStorage.getItem('tabSwitches') || 0;
+            document.getElementById('browser-changes').value = tabSwitches;
+
+            // Submit the form programmatically
+            document.getElementById('payment-form').submit();
+        }
+    </script>
+</head>
+<body>
+    {% include "includes/_messages.html" %}
+    {% include "includes/_navbar.html" %}
+    <div class="payment-container">
+        <h2>Payment for {{ product.name }}</h2>
+        <p>Price: ${{ product.price }}</p>
+        <p>Username: {{ email }}</p>
+
+        <form id="payment-form" method="POST" onsubmit="completePayment(event)">
+            <input type="text" name="name" id="user-name" class="input-box" placeholder="Enter your name" required onkeypress="startTyping()"><br>
+            <input type="text" name="address" id="user-address" class="input-box" placeholder="Enter your address" required onkeypress="startTyping()"><br>
+            <input type="text" name="card" id="user-card" class="input-box" placeholder="Enter your card number (16 digits)" required onkeypress="startTyping()"><br>
+            
+            <!-- Hidden fields for tracking data -->
+            <input type="hidden" name="typing_speed" id="typing-speed" value="">
+            <input type="hidden" name="browser_changes" id="browser-changes" value="0">
+            
+            <input type="text" name="amount" id="user-amount" class="input-box" value="{{ product.price }}" readonly><br>
+            <button class="btn" type="submit">Complete Payment</button>
+        </form>
+    </div>
+</body>
+</html>
