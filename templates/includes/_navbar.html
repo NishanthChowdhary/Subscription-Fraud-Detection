@@ -1,0 +1,9 @@
+<div class="navbar">
+    <h1>Online Shopping</h1>
+    <input type="text" id="search-bar" placeholder="Search for products..." oninput="searchProducts()">
+    {% if session.logged_in %}
+        <a class="login-btn" href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+        <a class="login-btn" href="{{ url_for('login') }}">Login</a>
+    {% endif %}
+</div>
